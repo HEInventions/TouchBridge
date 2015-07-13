@@ -1,0 +1,9 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="TouchBridge.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="DefaultLocation" Type="System.String" Scope="User">
+      <Value Profile="(Default)">ws://0.0.0.0:8282</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>

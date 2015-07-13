@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<!-- Application Settings and Libraries -->
+		<meta charset=utf-8 />
+		<title>UbiDisplays : Transmit Touches Application</title>
+		
+		<!-- Application visual Style -->
+		<style type="text/css">
+			html { background-color: black; margin: 0px; padding: 0px;  }
+		</style>
+		
+		<!-- Application Logic -->
+		<script type="text/javascript">
+			
+			var REPEATER_SERVER 	= "localhost";	// Repeater WebSocket host.
+			var REPEATER_PORT		= 8282;			// Repeater WebSocket port.
+			
+			//var REPEATER_ARGS 	= "ERREOR"							// Shuts down due to bad data.
+			//var REPEATER_ARGS		= "tuio?port=3333&host=localhost";	// TUIO output settings
+			//var REPEATER_ARGS		= "mouse"//?screen=2";					// Mouse output settings
+			//var REPEATER_ARGS		= "console?x=0&y=0&w=800&h=600";	// Console output settings
+			var REPEATER_ARGS		= "win7";							// Win7 output settings (only primary monitor supported)
+			//var REPEATER_ARGS		= "win8?screen=0";		// Win8 output settings
+			
+			var pRepeater;
+			var bConnected = false;
+			
+			// Prepare an event for sending to the repeater.
+			//		type	= u,d,m -> up, down, move
+			//		x,y,z 	= 0-1 coord that expresses the position in axis
+			// 		id		= number that describes input source (i.e. finger)
+			//		data	= optional user data string -- cannot contain '|' character
+			function event(type, x, y, z, id, data) {
+				var out = "#" + (type||"?") + "|" + (id || 0) + "|" + (x||0) + "|" + (y||0) + "|" + (z||0);
+				if (data !== undefined)
+					out += ("|" + data);
+				return out;
+			}
+			
+			// Send an event out to the repeater IF it exists.
+			function send(event) {
+				if (!bConnected)
+					return;
+				console.log(event);
+				pRepeater.send(event);
+			}
+			
+			// Connect to the repeater
+			function start() {
+				
+				// Create a web socket (use ReconnectingWebSocket if available).
+				var WS = window["ReconnectingWebSocket"] || WebSocket;
+				pRepeater = new WS("ws://" + REPEATER_SERVER + ":" + REPEATER_PORT + "/" + REPEATER_ARGS);
+				
+				// Status function bindings.
+				pRepeater.onconnecting	= function()  { console.log("[II] Connecting"); }
+				pRepeater.onopen 		= function()  { console.log("[II] Connected"); bConnected = true; }
+				pRepeater.onclose 		= function()  { console.log("[II] Disconnected"); bConnected = false; }
+				pRepeater.onerror  		= function()  { console.log("[II] Connection Error");  bConnected = false; }
+				pRepeater.onmessage		= function(e) { console.log("[II] Data: " + e ); }
+				
+				
+				// Bind mouse events.
+				var MOUSE = 0;
+				document.onmouseup 		= function(e) { send(event("u", e.pageX/window.innerWidth, e.pageY/window.innerHeight), MOUSE); };
+				document.onmousedown 	= function(e) { send(event("d", e.pageX/window.innerWidth, e.pageY/window.innerHeight), MOUSE); };
+				document.onmousemove 	= function(e) { send(event("m", e.pageX/window.innerWidth, e.pageY/window.innerHeight), MOUSE); };
+				
+			}
+			
+			
+		</script>
+	</head>
+	
+	<!-- Application structure -->
+	<body onload="start()">
+		<div class="pointer"></div>
+	</body>
+</html>
