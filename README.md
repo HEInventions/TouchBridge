@@ -5,6 +5,7 @@ Forward and convert touch events into console, mouse, TUIO, Win7, and Win8 event
 1. [DONE] Websocket Streaming 
 2. [ ] Socket Streaming
 3. [ ] STDIN Streaming
+4. [ ] Add Test Cases
 
 # Acknowledgements
 - [MIT] HIDLibrary https://github.com/mikeobrien/HidLibrary
