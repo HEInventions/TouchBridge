@@ -2,7 +2,7 @@
 Forward and convert touch events into console, mouse, TUIO, Win7, and Win8 events.
 
 # Roadmap
-1. [DONE] Websocket Streaming 
+1. [x] Websocket Streaming 
 2. [ ] Socket Streaming
 3. [ ] STDIN Streaming
 4. [ ] Add Test Cases
